@@ -1,6 +1,8 @@
 package io.github.christianjank
 
+import io.github.christianjank.lesson01.Vertex
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 class Canvas constructor(
     val width: Int,
@@ -65,12 +67,16 @@ class Canvas constructor(
         val step: Double = if (longSide != 0.0) 1 / longSide else 1.1
 
         var t = 0.0
-        while (t <= 1) {
+        while (t <= 1.0) {
             val x = x0 + dx * t
             val y = y0 + dy * t
-            this.setPixel(x.toInt(), y.toInt(), color)
+            this.setPixel(x.roundToInt(), y.roundToInt(), color)
             t += step
         }
+    }
+
+    fun line(t0: Vertex, t1: Vertex, color: Color) {
+        line(t0.x, t0.y, t1.x, t1.y, color)
     }
 
     private fun coords(x: Int, y: Int) = ((y * width) + x) * bytesPerPixel.value

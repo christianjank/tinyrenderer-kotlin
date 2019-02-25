@@ -68,6 +68,6 @@ fun readModel(): Model {
 
 data class Model(val vertices: List<Vertex>, val faces: List<Face>)
 
-data class Vertex(val x: Double, val y: Double, val z: Double)
+data class Vertex(val x: Double, val y: Double, val z: Double = 0.0)
 
 data class Face(val one: Int, val two: Int, val three: Int)
