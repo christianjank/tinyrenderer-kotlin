@@ -1,11 +1,11 @@
 package io.github.christianjank.lesson2
 
-import io.github.christianjank.renderer.Image
+import io.github.christianjank.lesson01.Vertex
 import io.github.christianjank.renderer.BGRAColor
 import io.github.christianjank.renderer.BGRAColor.Companion.GREEN
 import io.github.christianjank.renderer.BGRAColor.Companion.RED
 import io.github.christianjank.renderer.BGRAColor.Companion.WHITE
-import io.github.christianjank.lesson01.Vertex
+import io.github.christianjank.renderer.Image
 import io.github.christianjank.renderer.fileformat.writeTGA
 import java.io.File
 import kotlin.math.max
@@ -67,7 +67,7 @@ fun fillTriangleBarycentric(vertices: List<Vertex>, image: Image, color: BGRACol
 //            (1−u−v)∗A+u∗B+v∗C = P
 //            (1 - u - v) * A.x + u* B.x + v *C.x = P.x
 //            (1 - u - v) * A.y + u* B.y + v *C.y = P.y
-            
+
 //            val P = Vertex(x, y)
 //            if ()
 //        }
@@ -94,11 +94,11 @@ fun fillTriangle(vertices: List<Vertex>, image: Image, color: BGRAColor) {
     for (i in 0..triangleHeight) {
         val longSideEdge = lowestVertex.x + dxLong * (i / triangleHeight.toDouble())
         val segmentedSideEdge =
-            if (i + minY >= segmentHeight) when (aboveMidPointSteps) {
-                0.0 -> middleVertex.x
-                else -> middleVertex.x + dxUpper * ((i + minY - segmentHeight) / aboveMidPointSteps)
-            }
-            else lowestVertex.x + dxLower * (i / midPointSteps)
+                if (i + minY >= segmentHeight) when (aboveMidPointSteps) {
+                    0.0 -> middleVertex.x
+                    else -> middleVertex.x + dxUpper * ((i + minY - segmentHeight) / aboveMidPointSteps)
+                }
+                else lowestVertex.x + dxLower * (i / midPointSteps)
         drawLineBetween(segmentedSideEdge.toInt(), longSideEdge.toInt(), image, i + minY, color)
     }
 }
