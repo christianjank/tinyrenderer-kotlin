@@ -1,7 +1,9 @@
-package io.github.christianjank
+package io.github.christianjank.renderer.fileformat
 
-import io.github.christianjank.Color.Companion.GREEN
-import io.github.christianjank.Color.Companion.RED
+import io.github.christianjank.renderer.BGRAColor
+import io.github.christianjank.renderer.BGRAColor.Companion.GREEN
+import io.github.christianjank.renderer.BGRAColor.Companion.RED
+import io.github.christianjank.renderer.Image
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -77,7 +79,7 @@ class TGAHeader {
     }
 }
 
-fun readTGA(file: File): Canvas {
+fun readTGA(file: File): Image {
     if (!file.exists()) throw IllegalArgumentException("File doesn't exist")
 
     val fileBytes = file.readBytes()
@@ -85,8 +87,8 @@ fun readTGA(file: File): Canvas {
     val header = TGAHeader.readHeaderBytes(byteBuffer)
     val width = header.width
     val height = header.height
-    val bytesPerPixel: Color.BytesPerPixel =
-        Color.BytesPerPixel.fromInt(header.bitsPerPixel.toInt() ushr 3)
+    val bytesPerPixel: BGRAColor.BytesPerPixel =
+        BGRAColor.BytesPerPixel.fromInt(header.bitsPerPixel.toInt() ushr 3)
 
     println("Width: $width, height: $height, bytes-per-pixel: $bytesPerPixel")
     if (width <= 0 || height <= 0) {
@@ -105,7 +107,7 @@ fun readTGA(file: File): Canvas {
         println("datatype code ${header.datatypeCode}")
         throw IllegalArgumentException("Invalid file format")
     }
-    val image = Canvas(width.toInt(), height.toInt(), bytesPerPixel, imageBytes)
+    val image = Image(width.toInt(), height.toInt(), bytesPerPixel, imageBytes)
     if ((header.imageDescriptor and 0x20) == 0.toByte()) {
         image.flipVertically()
     }
@@ -115,7 +117,7 @@ fun readTGA(file: File): Canvas {
     return image
 }
 
-fun writeTGA(image: Canvas, file: File, rle: Boolean = false) {
+fun writeTGA(image: Image, file: File, rle: Boolean = false) {
     file.delete()
     file.createNewFile()
     if (!file.canWrite()) {
@@ -131,7 +133,7 @@ fun writeTGA(image: Canvas, file: File, rle: Boolean = false) {
     header.bitsPerPixel = (bytesPerPixel.value shl 3).toByte()
     header.width = image.width.toShort()
     header.height = image.height.toShort()
-    header.datatypeCode = if (bytesPerPixel == Color.BytesPerPixel.GRAYSCALE) {
+    header.datatypeCode = if (bytesPerPixel == BGRAColor.BytesPerPixel.GRAYSCALE) {
         if (rle) {
             11
         } else {
@@ -196,7 +198,7 @@ private fun loadRleData(fileBytes: ByteBuffer, width: Int, height: Int, bytesPer
     return targetByteBuffer.array().toUByteArray()
 }
 
-private fun unloadRleData(buffer: BufferedOutputStream, image: Canvas) {
+private fun unloadRleData(buffer: BufferedOutputStream, image: Image) {
     val maxChunkLength = 128
     val singleByteArray = ByteArray(1)
     val pixelCount = image.width * image.height
@@ -255,7 +257,7 @@ private fun readTest() {
 }
 
 private fun writeTest() {
-    val image = Canvas(1000, 1000, Color.BytesPerPixel.RGB)
+    val image = Image(1000, 1000, BGRAColor.BytesPerPixel.RGB)
     for (x in 0..100) {
         for (y in 0..100) {
             image.setPixel(x, y, RED)

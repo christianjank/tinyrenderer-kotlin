@@ -1,12 +1,12 @@
 package io.github.christianjank.lesson2
 
-import io.github.christianjank.Canvas
-import io.github.christianjank.Color
-import io.github.christianjank.Color.Companion.GREEN
-import io.github.christianjank.Color.Companion.RED
-import io.github.christianjank.Color.Companion.WHITE
+import io.github.christianjank.renderer.Image
+import io.github.christianjank.renderer.BGRAColor
+import io.github.christianjank.renderer.BGRAColor.Companion.GREEN
+import io.github.christianjank.renderer.BGRAColor.Companion.RED
+import io.github.christianjank.renderer.BGRAColor.Companion.WHITE
 import io.github.christianjank.lesson01.Vertex
-import io.github.christianjank.writeTGA
+import io.github.christianjank.renderer.fileformat.writeTGA
 import java.io.File
 import kotlin.math.max
 import kotlin.math.min
@@ -18,7 +18,7 @@ fun main() {
 private const val outputFile = "triangles.tga"
 
 fun createTriangles(): String {
-    val image = Canvas(1000, 1000, Color.BytesPerPixel.RGB)
+    val image = Image(1000, 1000, BGRAColor.BytesPerPixel.RGB)
     val t0 = listOf(Vertex(10.0, 140.0), Vertex(50.0, 320.0), Vertex(70.0, 160.0))
     val t1 = listOf(Vertex(320.0, 100.0), Vertex(450.0, 1.0), Vertex(600.0, 180.0))
     val t2 = listOf(Vertex(180.0, 150.0), Vertex(120.0, 160.0), Vertex(130.0, 180.0))
@@ -46,14 +46,36 @@ fun createTriangles(): String {
     return outputFile
 }
 
-fun outlineTriangle(vertices: List<Vertex>, image: Canvas, color: Color) {
+fun outlineTriangle(vertices: List<Vertex>, image: Image, color: BGRAColor) {
     image.line(vertices[0], vertices[1], color)
     image.line(vertices[1], vertices[2], color)
     image.line(vertices[2], vertices[0], color)
 }
 
+fun fillTriangleBarycentric(vertices: List<Vertex>, image: Image, color: BGRAColor) {
+    val A = vertices[0]
+    val B = vertices[1]
+    val C = vertices[2]
+    // calculate bounding box
+    val minX = min(min(A.x, B.x), C.x).toInt()
+    val minY = min(min(A.y, B.y), C.y).toInt()
+    val maxX = max(max(A.x, B.x), C.x).toInt()
+    val maxY = max(max(A.y, B.y), C.y).toInt()
 
-fun fillTriangle(vertices: List<Vertex>, image: Canvas, color: Color) {
+    for (x in minX..maxX) {
+//        for (y in minY..maxY) {
+//            (1−u−v)∗A+u∗B+v∗C = P
+//            (1 - u - v) * A.x + u* B.x + v *C.x = P.x
+//            (1 - u - v) * A.y + u* B.y + v *C.y = P.y
+            
+//            val P = Vertex(x, y)
+//            if ()
+//        }
+    }
+//    Vertex()
+}
+
+fun fillTriangle(vertices: List<Vertex>, image: Image, color: BGRAColor) {
     val sorted = vertices.sortedBy(Vertex::y)
     val lowestVertex = sorted[0]
     val middleVertex = sorted[1]
@@ -81,7 +103,7 @@ fun fillTriangle(vertices: List<Vertex>, image: Canvas, color: Color) {
     }
 }
 
-private fun drawLineBetween(edge1: Int, edge2: Int, image: Canvas, lineY: Int, color: Color) {
+private fun drawLineBetween(edge1: Int, edge2: Int, image: Image, lineY: Int, color: BGRAColor) {
     val start = min(edge1, edge2)
     val end = max(edge1, edge2)
     for (lineX in start..end) {

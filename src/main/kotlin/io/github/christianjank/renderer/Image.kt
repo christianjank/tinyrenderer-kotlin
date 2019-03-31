@@ -1,16 +1,17 @@
-package io.github.christianjank
+package io.github.christianjank.renderer
 
 import io.github.christianjank.lesson01.Vertex
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-class Canvas constructor(
-    val width: Int,
-    val height: Int,
-    val bytesPerPixel: Color.BytesPerPixel,
-    val data: UByteArray = UByteArray(width * height * bytesPerPixel.value)
+@ExperimentalUnsignedTypes
+class Image constructor(
+        val width: Int,
+        val height: Int,
+        val bytesPerPixel: BGRAColor.BytesPerPixel,
+        val data: UByteArray = UByteArray(width * height * bytesPerPixel.value)
 ) {
-    fun getPixel(x: Int, y: Int): Color {
+    fun getPixel(x: Int, y: Int): BGRAColor {
         if (x < 0 || y < 0 || x >= width || y >= height) throw IndexOutOfBoundsException("Invalid values of x = $x or y = $y")
 
         val offset = coords(x, y)
@@ -18,10 +19,10 @@ class Canvas constructor(
         for (i in 0 until bytesPerPixel.value) {
             rgbArr[i] = data[offset + i]
         }
-        return Color(rgbArr, bytesPerPixel)
+        return BGRAColor(rgbArr, bytesPerPixel)
     }
 
-    fun setPixel(x: Int, y: Int, c: Color) {
+    fun setPixel(x: Int, y: Int, c: BGRAColor) {
         if (x < 0 || y < 0 || x >= width || y >= height) throw IndexOutOfBoundsException("Invalid values of x = $x or y = $y")
 
         val offset = coords(x, y)
@@ -58,7 +59,7 @@ class Canvas constructor(
         }
     }
 
-    fun line(x0: Double, y0: Double, x1: Double, y1: Double, color: Color) {
+    fun line(x0: Double, y0: Double, x1: Double, y1: Double, color: BGRAColor) {
         val dx = x1 - x0
         val dy = y1 - y0
         val dxAbs = abs(dx)
@@ -75,11 +76,11 @@ class Canvas constructor(
         }
     }
 
-    fun line(t0: Vertex, t1: Vertex, color: Color) {
+    fun line(t0: Vertex, t1: Vertex, color: BGRAColor) {
         line(t0.x, t0.y, t1.x, t1.y, color)
     }
 
-    private fun coords(x: Int, y: Int) = ((y * width) + x) * bytesPerPixel.value
+    fun coords(x: Int, y: Int) = ((y * width) + x) * bytesPerPixel.value
 
     //    TODO scale
     //    TODO clear

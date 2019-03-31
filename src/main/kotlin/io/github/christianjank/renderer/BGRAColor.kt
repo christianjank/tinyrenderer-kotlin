@@ -1,6 +1,8 @@
-package io.github.christianjank
+package io.github.christianjank.renderer
 
-data class Color(val rawColorArray: UByteArray = UByteArray(size = 4), val bytespp: BytesPerPixel) {
+@Suppress("unused")
+@ExperimentalUnsignedTypes
+data class BGRAColor(val rawColorArray: UByteArray = UByteArray(size = 4), val bytespp: BytesPerPixel) {
     constructor(
         blue: UByte = 0u,
         green: UByte = 0u,
@@ -30,10 +32,10 @@ data class Color(val rawColorArray: UByteArray = UByteArray(size = 4), val bytes
     }
 
     companion object {
-        val WHITE: Color = Color(255u, 255u, 255u, 255u)
-        val BLACK: Color = Color(0u, 0u, 0u, 255u)
-        val RED: Color = Color(0u, 0u, 255u, 255u)
-        val GREEN: Color = Color(0u, 255u, 0u, 255u)
-        val BLUE: Color = Color(255u, 0u, 0u, 255u)
+        val WHITE: BGRAColor = BGRAColor(255u, 255u, 255u, 255u)
+        val BLACK: BGRAColor = BGRAColor(0u, 0u, 0u, 255u)
+        val RED: BGRAColor = BGRAColor(0u, 0u, 255u, 255u)
+        val GREEN: BGRAColor = BGRAColor(0u, 255u, 0u, 255u)
+        val BLUE: BGRAColor = BGRAColor(255u, 0u, 0u, 255u)
     }
 }
