@@ -8,12 +8,13 @@ import javafx.scene.Scene
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.image.PixelFormat
+import javafx.scene.layout.BorderPane
 import javafx.scene.layout.StackPane
-import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import java.nio.ByteBuffer
 
 
+@ExperimentalUnsignedTypes
 class Renderer : Application() {
 
     override fun start(primaryStage: Stage) {
@@ -33,16 +34,19 @@ class Renderer : Application() {
         faceTab.content = faceSketchCanvas
         tabPane.tabs.add(faceTab)
 
-        val root = VBox(5.0, tabPane)
+        val root = BorderPane()
+        root.center = tabPane
         primaryStage.scene = Scene(root)
         primaryStage.show()
     }
 }
 
+@ExperimentalUnsignedTypes
 fun main(vararg args: String) {
     Application.launch(Renderer::class.java, *args)
 }
 
+@ExperimentalUnsignedTypes
 fun Sketch.createFxCanvas(): StackPane {
     val canvas = javafx.scene.canvas.Canvas(
             this.width.toDouble(),

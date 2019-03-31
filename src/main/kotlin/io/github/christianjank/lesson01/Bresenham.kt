@@ -8,6 +8,7 @@ import io.github.christianjank.renderer.BGRAColor.Companion.RED
 import io.github.christianjank.renderer.Sketch
 import kotlin.math.abs
 
+@ExperimentalUnsignedTypes
 class Bresenham : Sketch {
     override val name = "Lesson1_Bresenham"
     override val width = 300
@@ -29,6 +30,7 @@ class Bresenham : Sketch {
 }
 
 
+@ExperimentalUnsignedTypes
 fun Image.lineWithPrimitiveBresenham(x0: Int, y0: Int, x1: Int, y1: Int, color: BGRAColor) {
     var t = 0.0
     val step = 0.05
@@ -40,6 +42,7 @@ fun Image.lineWithPrimitiveBresenham(x0: Int, y0: Int, x1: Int, y1: Int, color: 
     }
 }
 
+@ExperimentalUnsignedTypes
 fun Image.lineWithBresenhamFillingX(x0: Int, y0: Int, x1: Int, y1: Int, color: BGRAColor) {
     val stepDiv = x0 - x1
     val step: Double = if (stepDiv != 0) 1 / abs(stepDiv).toDouble() else 1.1
